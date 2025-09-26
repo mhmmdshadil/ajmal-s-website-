@@ -1,163 +1,776 @@
-import React from "react";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajmal | Embedded Developer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS Variables for consistent theming */
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f7;
+            --text-primary: #1d1d1f;
+            --text-secondary: #86868b;
+            --accent: #0071e3;
+            --accent-hover: #0077ed;
+            --border: #d2d2d7;
+            --shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
 
-/*
-  Portfolio component (fixed for GitHub builds)
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  Fix summary:
-  - Removed direct static ES import of `profile.png` which breaks when the image isn't next to the component file.
-  - Uses a runtime-resolved `profileSrc` that respects CRA's `process.env.PUBLIC_URL` (if present) and falls back to `/profile.png`.
-  - Adds an onError handler to the <img> to fall back to an inline SVG placeholder when the image can't be found at build/runtime.
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
 
-  Deployment notes:
-  - Put `profile.png` in your project's `public/` folder for Create React App / Vite / GitHub Pages deployments.
-  - If you host under a subpath (e.g. GitHub Pages like `/username/repo-name/`), make sure `PUBLIC_URL` is set (CRA's `homepage` field in package.json), or replace `profileSrc` with the correct absolute path.
-*/
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.47059;
+            font-weight: 400;
+            letter-spacing: -0.022em;
+            overflow-x: hidden;
+        }
 
-const PUBLIC_URL = (typeof process !== "undefined" && process.env && process.env.PUBLIC_URL)
-  ? process.env.PUBLIC_URL
-  : "";
-const profileSrc = `${PUBLIC_URL}/profile.png`;
+        .container {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 0 22px;
+        }
 
-// Simple placeholder (inline SVG) used when the image isn't found
-const placeholderSVG =
-  'data:image/svg+xml;utf8,' +
-  encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">` +
-      `<rect width="100%" height="100%" fill="#111"/>` +
-      `<text x="50%" y="50%" fill="#888" font-family="Inter, Arial, sans-serif" font-size="72" dominant-baseline="middle" text-anchor="middle">AJ</text>` +
-    `</svg>`
-  );
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            letter-spacing: -0.028em;
+            line-height: 1.1;
+        }
 
-function Button({ children, className = "", ...props }) {
-  return (
-    <button
-      {...props}
-      className={`rounded-full px-6 py-3 font-semibold transition ${className}`}
-    >
-      {children}
-    </button>
-  );
-}
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
 
-function GithubIcon({ size = 20 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-      <path d="M12 .5C5.73.5.75 5.48.75 11.75c0 4.94 3.2 9.13 7.64 10.61.56.1.76-.24.76-.53 0-.26-.01-1-.02-1.96-3.11.68-3.77-1.5-3.77-1.5-.51-1.3-1.25-1.65-1.25-1.65-1.02-.7.08-.69.08-.69 1.12.08 1.71 1.16 1.71 1.16 1 .71 2.62.5 3.26.38.1-.78.39-1.3.71-1.6-2.49-.28-5.11-1.25-5.11-5.56 0-1.23.44-2.24 1.16-3.03-.12-.28-.5-1.4.11-2.92 0 0 .95-.3 3.12 1.16.9-.25 1.86-.38 2.82-.38.96 0 1.92.13 2.82.38 2.17-1.46 3.12-1.16 3.12-1.16.61 1.52.23 2.64.12 2.92.72.79 1.16 1.8 1.16 3.03 0 4.32-2.62 5.27-5.12 5.55.4.35.76 1.04.76 2.1 0 1.52-.01 2.74-.01 3.11 0 .29.19.64.77.53C19.06 20.88 22.26 16.7 22.26 11.75 22.26 5.48 17.28.5 12 .5z" />
-    </svg>
-  );
-}
-function LinkedinIcon({ size = 20 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-      <path d="M4.98 3.5C4.98 4.88 3.86 6 2.48 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM0 8.5h5v15H0v-15zm7.5 0h4.8v2.1h.1c.67-1.27 2.3-2.6 4.73-2.6 5.06 0 6 3.33 6 7.66v8.84h-5V16.2c0-2.07-.04-4.74-2.88-4.74-2.88 0-3.32 2.25-3.32 4.57v8.02H7.5v-15z"/>
-    </svg>
-  );
-}
-function MailIcon({ size = 20 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-      <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5L4 8V6l8 5 8-5v2z"/>
-    </svg>
-  );
-}
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
 
-export default function Portfolio() {
-  return (
-    <div className="min-h-screen bg-black text-white font-sans tracking-wide">
-      {/* Hero Section */}
-      <header className="relative h-screen flex flex-col justify-center items-center text-center px-6 overflow-hidden">
-        <h1 className="text-6xl md:text-8xl font-extrabold uppercase bg-clip-text text-transparent bg-gradient-to-r from-gray-100 to-gray-400">
-          Ajmal
-        </h1>
+        h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
 
-        {/* Replaced the three lines under the name with a single subtitle as requested */}
-        <p className="mt-4 text-neutral-400 text-lg md:text-xl">Junior Embedded Developer</p>
+        p {
+            font-size: 1.0625rem;
+            line-height: 1.47059;
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
 
-        {/* CTA */}
-        <Button className="mt-10 border border-neutral-700 text-sm uppercase tracking-wider bg-transparent hover:bg-neutral-900">Explore →</Button>
-      </header>
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: var(--transition);
+        }
 
-      {/* About Section */}
-      <section id="about" className="py-24 px-6 md:px-20 flex flex-col md:flex-row items-center gap-12 border-t border-neutral-900">
-        <div className="md:w-1/2">
-          <h2 className="text-3xl font-semibold mb-6 uppercase">About Ajmal</h2>
-          <p className="text-neutral-400 leading-relaxed max-w-xl">
-            Since 2013, Ajmal has immersed himself in the world of craftsmanship, forging a deep connection with digital design and interactive experiences. Every project tells a story, reflecting timeless elegance merged with modern functionality.
-          </p>
-          <Button className="mt-6 border border-neutral-600 px-6 py-2 rounded-full hover:bg-neutral-800 text-sm uppercase">Learn More →</Button>
-        </div>
+        a:hover {
+            color: var(--accent-hover);
+        }
 
-        <div className="md:w-1/2 flex justify-center">
-          {/* Use runtime-resolved public path to avoid import/build issues */}
-          <img
-            src={profileSrc}
-            alt="Ajmal"
-            className="rounded-xl w-80 h-80 object-cover shadow-lg"
-            onError={(e) => {
-              // Fallback to inline placeholder PNG (data URI)
-              const target = e.currentTarget;
-              target.onerror = null;
-              target.src = placeholderSVG;
-            }}
-          />
-        </div>
-      </section>
+        /* Header Styles */
+        header {
+            padding: 80px 0 40px;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
 
-      {/* Gallery Section */}
-      <section id="gallery" className="py-24 px-6 md:px-20 border-t border-neutral-900 text-center">
-        <h2 className="text-3xl font-semibold mb-12 uppercase">Gallery</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-            <div key={i} className="bg-neutral-900 aspect-square flex items-center justify-center">
-              <span className="text-neutral-600">Image {i}</span>
+        .profile-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .profile-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0071e3, #7ed0ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .profile-image i {
+            font-size: 48px;
+            color: white;
+        }
+
+        .tagline {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--text-primary);
+            font-size: 1.0625rem;
+            font-weight: 400;
+            position: relative;
+            padding: 8px 0;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent);
+            transition: var(--transition);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 80px 0;
+            position: relative;
+        }
+
+        .section-alt {
+            background-color: var(--bg-secondary);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 48px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background-color: var(--accent);
+            border-radius: 3px;
+        }
+
+        /* About Section */
+        .about-content {
+            display: flex;
+            gap: 48px;
+            align-items: center;
+        }
+
+        .about-text {
+            flex: 1;
+        }
+
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .skill {
+            background-color: var(--bg-secondary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+
+        .skill:hover {
+            background-color: var(--accent);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Projects Section */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 32px;
+        }
+
+        .project-card {
+            background-color: var(--bg-primary);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .project-image {
+            height: 200px;
+            background-color: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 3rem;
+        }
+
+        .project-content {
+            padding: 24px;
+        }
+
+        .project-title {
+            margin-bottom: 8px;
+        }
+
+        .project-description {
+            font-size: 0.9375rem;
+            margin-bottom: 16px;
+        }
+
+        .project-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9375rem;
+            font-weight: 500;
+        }
+
+        /* Timeline Section */
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: var(--border);
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 48px;
+            width: 50%;
+            padding-right: 40px;
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 50%;
+            padding-left: 40px;
+            padding-right: 0;
+        }
+
+        .timeline-content {
+            background-color: var(--bg-primary);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .timeline-content:hover {
+            transform: translateX(5px);
+        }
+
+        .timeline-date {
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content:hover {
+            transform: translateX(-5px);
+        }
+
+        .timeline-marker {
+            position: absolute;
+            top: 24px;
+            right: -10px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            border: 4px solid var(--bg-primary);
+            z-index: 1;
+        }
+
+        .timeline-item:nth-child(even) .timeline-marker {
+            left: -10px;
+            right: auto;
+        }
+
+        /* Contact Section */
+        .contact-content {
+            display: flex;
+            gap: 48px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .contact-form {
+            flex: 1;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+            padding: 16px;
+            background-color: var(--bg-secondary);
+            border-radius: 12px;
+            transition: var(--transition);
+        }
+
+        .info-item:hover {
+            background-color: #e8e8ed;
+        }
+
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+            color: white;
+            font-size: 1.125rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .social-link:hover {
+            background-color: var(--accent);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 16px;
+            background-color: var(--bg-secondary);
+            border: 1px solid transparent;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+
+        .form-control:focus {
+            outline: none;
+            background-color: white;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 32px;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            background-color: var(--bg-secondary);
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .copyright {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            h2 {
+                font-size: 2rem;
+            }
+            
+            nav {
+                gap: 20px;
+            }
+            
+            .about-content, .contact-content {
+                flex-direction: column;
+            }
+            
+            .timeline::before {
+                left: 20px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 50px;
+                padding-right: 0;
+            }
+            
+            .timeline-item:nth-child(even) {
+                left: 0;
+                padding-left: 50px;
+            }
+            
+            .timeline-marker {
+                left: 10px;
+                right: auto;
+            }
+            
+            .timeline-item:nth-child(even) .timeline-marker {
+                left: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="container">
+            <div class="profile-container">
+                <div class="profile-image">
+                    <i class="fas fa-microchip"></i>
+                </div>
+                <div>
+                    <h1>Ajmal</h1>
+                    <p class="tagline">Junior Embedded Developer crafting the future with innovation and precision</p>
+                </div>
             </div>
-          ))}
+            <nav>
+                <a href="#about">About</a>
+                <a href="#projects">Projects</a>
+                <a href="#timeline">Timeline</a>
+                <a href="#contact">Contact</a>
+            </nav>
         </div>
-      </section>
+    </header>
 
-      {/* Achievements Section */}
-      <section id="achievements" className="py-24 px-6 md:px-20 border-t border-neutral-900">
-        <h2 className="text-3xl font-semibold mb-12 uppercase">Achievements</h2>
-        <div className="grid md:grid-cols-3 gap-8">
-          <div>
-            <h3 className="text-xl font-semibold">Award</h3>
-            <p className="text-neutral-400">2023 • Laureat Fondation</p>
-          </div>
-          <div>
-            <h3 className="text-xl font-semibold">Exhibitions</h3>
-            <p className="text-neutral-400">Paris • 2023</p>
-          </div>
-          <div>
-            <h3 className="text-xl font-semibold">Showcase</h3>
-            <p className="text-neutral-400">Digital Experience • 2023</p>
-          </div>
+    <!-- About Section -->
+    <section id="about" class="section">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-content">
+                <div class="about-text fade-in">
+                    <p>I'm Ajmal, a passionate embedded developer with a deep fascination for the intersection of hardware and software. My journey in embedded systems began with a simple microcontroller and has evolved into creating complex IoT solutions.</p>
+                    <p>I believe that the future of technology lies in efficient, intelligent embedded systems that seamlessly integrate with our daily lives. My mission is to contribute to this future by developing innovative solutions that push the boundaries of what's possible.</p>
+                    <p>When I'm not coding, you can find me exploring new technologies, contributing to open-source projects, or sharing knowledge with the developer community.</p>
+                    
+                    <div class="skills">
+                        <span class="skill">C/C++</span>
+                        <span class="skill">ARM Cortex-M</span>
+                        <span class="skill">RTOS</span>
+                        <span class="skill">IoT Protocols</span>
+                        <span class="skill">PCB Design</span>
+                        <span class="skill">Embedded Linux</span>
+                        <span class="skill">Python</span>
+                        <span class="skill">Communication Protocols</span>
+                    </div>
+                </div>
+            </div>
         </div>
-      </section>
+    </section>
 
-      {/* Quote Section */}
-      <section className="py-24 px-6 md:px-20 text-center border-t border-neutral-900">
-        <p className="text-3xl md:text-4xl italic max-w-3xl mx-auto leading-relaxed">“Through fire and finesse, we bring forth the soul of design.”</p>
-      </section>
-
-      {/* Contact Section */}
-      <section id="contact" className="py-24 px-6 md:px-20 border-t border-neutral-900 text-center">
-        <h2 className="text-3xl font-semibold mb-6 uppercase">Feel The Texture</h2>
-        <form className="max-w-lg mx-auto flex flex-col gap-4">
-          <input type="text" placeholder="Your Name" className="p-3 bg-neutral-900 border border-neutral-700 rounded-md" />
-          <input type="email" placeholder="Your Email" className="p-3 bg-neutral-900 border border-neutral-700 rounded-md" />
-          <Button className="bg-neutral-200 text-black px-6 py-3 rounded-full hover:bg-neutral-300 font-semibold uppercase tracking-wide">Get in Touch →</Button>
-        </form>
-      </section>
-
-      {/* Footer */}
-      <footer className="py-8 text-center text-neutral-500 border-t border-neutral-900 text-sm">
-        <p>© {new Date().getFullYear()} Ajmal — All Rights Reserved.</p>
-        <div className="flex justify-center gap-4 mt-4 text-neutral-400">
-          <a href="#" aria-label="GitHub"><GithubIcon size={20} /></a>
-          <a href="#" aria-label="LinkedIn"><LinkedinIcon size={20} /></a>
-          <a href="mailto:ajmal@example.com" aria-label="Mail"><MailIcon size={20} /></a>
+    <!-- Projects Section -->
+    <section id="projects" class="section section-alt">
+        <div class="container">
+            <h2 class="section-title">Projects</h2>
+            <div class="projects-grid">
+                <div class="project-card fade-in">
+                    <div class="project-image">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Smart Home Automation</h3>
+                        <p class="project-description">IoT-based home automation system with sensor integration and remote control capabilities.</p>
+                        <a href="#" class="project-link">View Details <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="project-card fade-in">
+                    <div class="project-image">
+                        <i class="fas fa-industry"></i>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Industrial Monitoring</h3>
+                        <p class="project-description">Real-time sensor data collection and analysis system for industrial applications.</p>
+                        <a href="#" class="project-link">View Details <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="project-card fade-in">
+                    <div class="project-image">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Robotics Control</h3>
+                        <p class="project-description">Embedded control system for autonomous robotics with path planning algorithms.</p>
+                        <a href="#" class="project-link">View Details <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
         </div>
-      </footer>
-    </div>
-  );
-}
+    </section>
+
+    <!-- Timeline Section -->
+    <section id="timeline" class="section">
+        <div class="container">
+            <h2 class="section-title">Timeline</h2>
+            <div class="timeline">
+                <div class="timeline-item fade-in">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">2023</span>
+                        <h3>Advanced Embedded Systems Workshop</h3>
+                        <p>Completed an intensive workshop on advanced embedded systems design and real-time operating systems.</p>
+                    </div>
+                </div>
+                <div class="timeline-item fade-in">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">2023</span>
+                        <h3>IoT Project Completion</h3>
+                        <p>Successfully designed and implemented a comprehensive IoT solution for environmental monitoring.</p>
+                    </div>
+                </div>
+                <div class="timeline-item fade-in">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">2022</span>
+                        <h3>First Microcontroller Project</h3>
+                        <p>Developed my first embedded system project using ARM Cortex-M microcontroller.</p>
+                    </div>
+                </div>
+                <div class="timeline-item fade-in">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">2021</span>
+                        <h3>Embedded Systems Fundamentals</h3>
+                        <p>Mastered the fundamentals of embedded systems programming and hardware interfacing.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section section-alt">
+        <div class="container">
+            <h2 class="section-title">Get in Touch</h2>
+            <div class="contact-content">
+                <div class="contact-info fade-in">
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h3>Email</h3>
+                            <p>mohammedajmalbinjaleel@gmail.com</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h3>Location</h3>
+                            <p>Kerala, India</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div>
+                            <h3>Availability</h3>
+                            <p>Open to new opportunities</p>
+                        </div>
+                    </div>
+                    
+                    <div class="social-links">
+                        <a href="https://www.instagram.com/_ajmalbinjaleel_?igsh=MXJ2aXd1ejdtd2tlOA==" class="social-link">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/mohammed-ajmal-t-j-19993824a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" class="social-link">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="contact-form fade-in">
+                    <form>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" class="form-control" placeholder="Your Email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Subject" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" rows="5" placeholder="Your Message" required></textarea>
+                        </div>
+                        <button type="submit" class="btn">Send Message <i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Sitemap</a>
+            </div>
+            <p class="copyright">© 2023 Ajmal. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Fade-in animation on scroll
+        const fadeElements = document.querySelectorAll('.fade-in');
+        
+        const fadeInOnScroll = () => {
+            fadeElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('visible');
+                }
+            });
+        };
+        
+        window.addEventListener('scroll', fadeInOnScroll);
+        // Initial check in case elements are already in view
+        fadeInOnScroll();
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                window.scrollTo({
+                    top: targetElement.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

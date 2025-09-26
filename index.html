@@ -8,25 +8,25 @@
     <style>
         /* CSS Variables for consistent theming */
         :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f5f5f7;
-            --text-primary: #1d1d1f;
-            --text-secondary: #86868b;
-            --accent: #0071e3;
-            --accent-hover: #0077ed;
-            --border: #d2d2d7;
-            --shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-            --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-
-        /* Dark mode variables */
-        .dark-mode {
             --bg-primary: #000000;
             --bg-secondary: #1d1d1f;
             --text-primary: #f5f5f7;
             --text-secondary: #a1a1a6;
+            --accent: #0071e3;
+            --accent-hover: #0077ed;
             --border: #424245;
             --shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* Light mode variables */
+        .light-mode {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f7;
+            --text-primary: #1d1d1f;
+            --text-secondary: #86868b;
+            --border: #d2d2d7;
+            --shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
         }
 
         /* Base Styles */
@@ -84,7 +84,7 @@
             transition: transform 0.3s;
         }
 
-        .dark-mode .toggle-circle {
+        .light-mode .toggle-circle {
             transform: translateX(30px);
         }
 
@@ -253,11 +253,13 @@
             overflow: hidden;
             box-shadow: var(--shadow);
             transition: var(--transition);
+            border: 1px solid var(--border);
         }
 
         .project-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+            border-color: var(--accent);
         }
 
         .project-image {
@@ -266,8 +268,18 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--text-secondary);
-            font-size: 3rem;
+            overflow: hidden;
+        }
+
+        .project-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .project-card:hover .project-image img {
+            transform: scale(1.05);
         }
 
         .project-content {
@@ -328,10 +340,12 @@
             border-radius: 12px;
             box-shadow: var(--shadow);
             transition: var(--transition);
+            border: 1px solid var(--border);
         }
 
         .timeline-content:hover {
             transform: translateX(5px);
+            border-color: var(--accent);
         }
 
         .timeline-date {
@@ -364,35 +378,37 @@
 
         /* Contact Section */
         .contact-content {
-            display: flex;
-            gap: 48px;
-            max-width: 800px;
+            max-width: 600px;
             margin: 0 auto;
+            text-align: center;
         }
 
-        .contact-info {
-            flex: 1;
+        .contact-intro {
+            margin-bottom: 40px;
         }
 
-        .contact-form {
-            flex: 1;
+        .contact-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 40px;
         }
 
-        .info-item {
+        .contact-item {
             display: flex;
             align-items: center;
-            margin-bottom: 24px;
-            padding: 16px;
-            background-color: var(--bg-secondary);
-            border-radius: 12px;
+            justify-content: center;
+            gap: 15px;
+            padding: 15px;
+            border-radius: 10px;
             transition: var(--transition);
         }
 
-        .info-item:hover {
-            background-color: var(--dark-mode) ? #2c2c2e : #e8e8ed;
+        .contact-item:hover {
+            background-color: var(--bg-secondary);
         }
 
-        .info-icon {
+        .contact-icon {
             width: 40px;
             height: 40px;
             background-color: var(--accent);
@@ -400,15 +416,29 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 16px;
             color: white;
             font-size: 1.125rem;
         }
 
+        .contact-details {
+            text-align: left;
+        }
+
+        .contact-details h3 {
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .contact-details p {
+            margin-bottom: 0;
+            font-size: 0.95rem;
+        }
+
         .social-links {
             display: flex;
+            justify-content: center;
             gap: 16px;
-            margin-top: 24px;
+            margin-top: 30px;
         }
 
         .social-link {
@@ -427,49 +457,6 @@
             background-color: var(--accent);
             color: white;
             transform: translateY(-3px);
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 16px;
-            background-color: var(--bg-secondary);
-            border: 1px solid transparent;
-            border-radius: 12px;
-            font-size: 1rem;
-            transition: var(--transition);
-            font-family: inherit;
-        }
-
-        .form-control:focus {
-            outline: none;
-            background-color: var(--bg-primary);
-            border-color: var(--accent);
-            box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 16px 32px;
-            background-color: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-            gap: 8px;
-        }
-
-        .btn:hover {
-            background-color: var(--accent-hover);
-            transform: translateY(-2px);
         }
 
         /* Footer */
@@ -550,10 +537,19 @@
             .timeline-item:nth-child(even) .timeline-marker {
                 left: 10px;
             }
+            
+            .contact-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .contact-details {
+                text-align: center;
+            }
         }
     </style>
 </head>
-<body>
+<body class="dark-mode">
     <!-- Dark Mode Toggle -->
     <div class="dark-mode-toggle" id="darkModeToggle">
         <div class="toggle-circle"></div>
@@ -600,32 +596,12 @@
             <div class="projects-grid">
                 <div class="project-card fade-in">
                     <div class="project-image">
-                        <i class="fas fa-home"></i>
+                        <img src="https://images.unsplash.com/photo-1589652717521-10c0d092dea9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Landslide Prediction System">
                     </div>
                     <div class="project-content">
-                        <h3 class="project-title">Smart Home Automation</h3>
-                        <p class="project-description">IoT-based home automation system with sensor integration and remote control capabilities.</p>
-                        <a href="#" class="project-link">View Details <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
-                <div class="project-card fade-in">
-                    <div class="project-image">
-                        <i class="fas fa-industry"></i>
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Industrial Monitoring</h3>
-                        <p class="project-description">Real-time sensor data collection and analysis system for industrial applications.</p>
-                        <a href="#" class="project-link">View Details <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
-                <div class="project-card fade-in">
-                    <div class="project-image">
-                        <i class="fas fa-robot"></i>
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Robotics Control</h3>
-                        <p class="project-description">Embedded control system for autonomous robotics with path planning algorithms.</p>
-                        <a href="#" class="project-link">View Details <i class="fas fa-arrow-right"></i></a>
+                        <h3 class="project-title">IoT-Based Landslide Prediction</h3>
+                        <p class="project-description">An innovative system using soil moisture sensors and machine learning to predict landslides in vulnerable areas, providing early warnings to communities.</p>
+                        <a href="https://www.linkedin.com/posts/mohammed-ajmal-t-j-19993824a_iot-engineeringprojects-landslideprediction-activity-7314915570586374144-8lue?utm_source=share&utm_medium=member_desktop&rcm=ACoAAFuZtNEBGBT9P3QwE50YTrA6Ow5h3A9sbwA" class="project-link">View Project <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
@@ -637,6 +613,15 @@
         <div class="container">
             <h2 class="section-title">Timeline</h2>
             <div class="timeline">
+                <div class="timeline-item fade-in">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">2024</span>
+                        <h3>Internship at Incube</h3>
+                        <p>Currently interning at Incube, gaining hands-on experience in embedded systems development and IoT solutions.</p>
+                        <a href="https://www.linkedin.com/posts/mohammed-ajmal-t-j-19993824a_proud-to-begin-my-internship-at-incube-activity-7368280049558421505-G59R?utm_source=share&utm_medium=member_desktop&rcm=ACoAAFuZtNEBGBT9P3QwE50YTrA6Ow5h3A9sbwA" class="project-link" style="margin-top: 10px; display: inline-block;">View Post <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
                 <div class="timeline-item fade-in">
                     <div class="timeline-marker"></div>
                     <div class="timeline-content">
@@ -661,14 +646,6 @@
                         <p>Developed my first embedded system project using ARM Cortex-M microcontroller.</p>
                     </div>
                 </div>
-                <div class="timeline-item fade-in">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <span class="timeline-date">2021</span>
-                        <h3>Embedded Systems Fundamentals</h3>
-                        <p>Mastered the fundamentals of embedded systems programming and hardware interfacing.</p>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
@@ -677,65 +654,53 @@
     <section id="contact" class="section section-alt">
         <div class="container">
             <h2 class="section-title">Get in Touch</h2>
-            <div class="contact-content">
-                <div class="contact-info fade-in">
-                    <div class="info-item">
-                        <div class="info-icon">
+            <div class="contact-content fade-in">
+                <div class="contact-intro">
+                    <p>I'm always open to discussing new opportunities and interesting projects. Feel free to reach out if you'd like to connect!</p>
+                </div>
+                
+                <div class="contact-methods">
+                    <div class="contact-item">
+                        <div class="contact-icon">
                             <i class="fas fa-envelope"></i>
                         </div>
-                        <div>
+                        <div class="contact-details">
                             <h3>Email</h3>
                             <p>mohammedajmalbinjaleel@gmail.com</p>
                         </div>
                     </div>
-                    <div class="info-item">
-                        <div class="info-icon">
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
                             <i class="fas fa-map-marker-alt"></i>
                         </div>
-                        <div>
+                        <div class="contact-details">
                             <h3>Location</h3>
                             <p>Kerala, India</p>
                         </div>
                     </div>
-                    <div class="info-item">
-                        <div class="info-icon">
-                            <i class="fas fa-clock"></i>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-briefcase"></i>
                         </div>
-                        <div>
+                        <div class="contact-details">
                             <h3>Availability</h3>
                             <p>Open to new opportunities</p>
                         </div>
                     </div>
-                    
-                    <div class="social-links">
-                        <a href="https://www.instagram.com/_ajmalbinjaleel_?igsh=MXJ2aXd1ejdtd2tlOA==" class="social-link">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="https://www.linkedin.com/in/mohammed-ajmal-t-j-19993824a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" class="social-link">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a href="#" class="social-link">
-                            <i class="fab fa-github"></i>
-                        </a>
-                    </div>
                 </div>
                 
-                <div class="contact-form fade-in">
-                    <form>
-                        <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Your Name" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="email" class="form-control" placeholder="Your Email" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Subject" required>
-                        </div>
-                        <div class="form-group">
-                            <textarea class="form-control" rows="5" placeholder="Your Message" required></textarea>
-                        </div>
-                        <button type="submit" class="btn">Send Message <i class="fas fa-paper-plane"></i></button>
-                    </form>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/_ajmalbinjaleel_?igsh=MXJ2aXd1ejdtd2tlOA==" class="social-link">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/mohammed-ajmal-t-j-19993824a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" class="social-link">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#" class="social-link">
+                        <i class="fab fa-github"></i>
+                    </a>
                 </div>
             </div>
         </div>
@@ -749,7 +714,7 @@
                 <a href="#">Terms of Service</a>
                 <a href="#">Sitemap</a>
             </div>
-            <p class="copyright">© 2023 Ajmal. All rights reserved.</p>
+            <p class="copyright">© 2024 Ajmal. All rights reserved.</p>
         </div>
     </footer>
 
@@ -758,14 +723,13 @@
         const darkModeToggle = document.getElementById('darkModeToggle');
         const body = document.body;
         
-        // Check for saved theme preference or respect OS preference
-        if (localStorage.getItem('darkMode') === 'enabled' || 
-            (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && !localStorage.getItem('darkMode'))) {
-            body.classList.add('dark-mode');
-        }
+        // Set dark mode as default
+        body.classList.add('dark-mode');
+        localStorage.setItem('darkMode', 'enabled');
         
         darkModeToggle.addEventListener('click', () => {
             body.classList.toggle('dark-mode');
+            body.classList.toggle('light-mode');
             
             // Save user preference
             if (body.classList.contains('dark-mode')) {
